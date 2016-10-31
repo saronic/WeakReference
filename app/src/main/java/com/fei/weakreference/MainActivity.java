@@ -1,21 +1,20 @@
 package com.fei.weakreference;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity {
     private Button mShowToastBtn;
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Toast.makeText(MainActivity.this, "get message", Toast.LENGTH_SHORT).show();
-        }
-    };
+    private Handler mHandler = new MyHandler(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,4 +27,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private static class MyHandler extends Handler {
+        private WeakReference<Activity> mActivityReference;
+
+        public MyHandler(Activity activity) {
+            mActivityReference = new WeakReference<Activity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            Toast.makeText(mActivityReference.get(), "get message", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
