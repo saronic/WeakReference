@@ -28,4 +28,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Remove any pending posts of callbacks and sent messages whose obj is token.
+        //If token is null, all callbacks and messages will be removed.
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }
